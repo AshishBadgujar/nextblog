@@ -15,7 +15,9 @@ export default function Feed() {
     return (
         <>
             {myBlogs.length == 0 ?
-                <span className="loading loading-spinner loading-lg"></span>
+                <section className="h-screen flex justify-center items-center">
+                    <progress className="progress w-12"></progress>
+                </section>
                 :
                 <>
                     <section>

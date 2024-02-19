@@ -1,7 +1,4 @@
-import BannerCard from '@/components/common/card/BannerCard'
-import PostCard from '@/components/common/card/PostCard'
 import Feed from '@/components/main'
-import Link from 'next/link'
 
 export const metadata = {
    title: 'Home Page | MetaBlog',

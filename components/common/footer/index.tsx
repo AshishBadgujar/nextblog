@@ -1,7 +1,7 @@
 import { FooterDataOne, FooterDataTwo } from '@/data/footerData'
 import Link from 'next/link'
 import React from 'react'
-import NewsLetter from '@/components/newsletter/NewsLetter'
+import NewsLetter from '@/components/common/newsletter/NewsLetter'
 import useMode from '@/utils/themeMode'
 import { Favicon } from '@/components/common/header'
 

@@ -57,22 +57,27 @@ export default function page() {
         <main>
             <div className="container mx-auto">
                 <form onSubmit={(e) => handleSubmit(e)} encType="multipart/form-data">
-                    <h1 className=''>Write</h1>
-                    <label className="form-control w-full max-w-xs">
+                    <h1 className='text-5xl font-bold my-8'>Write</h1>
+                    <label className="form-control my-4">
                         <div className="label">
                             <span className="label-text">Title</span>
                         </div>
-                        <input type="text" placeholder="Type here" value={title} onChange={(e) => setTitle(e.target.value)} className="input input-bordered w-full max-w-xs" />
+                        <input type="text" placeholder="Type here" value={title} onChange={(e) => setTitle(e.target.value)} className="input input-bordered" />
                     </label>
-                    <input type="file" accept="image/*" onChange={(e) => {
-                        const file = e.target.files && e.target.files[0];
-                        if (file) {
-                            setMedia(file);
-                        }
-                    }} className="file-input w-full max-w-xs" />
-                    {media && <Image src={URL.createObjectURL(media)} alt="img" width={200} height={100} />}
+                    <label className="form-control w-full max-w-xs my-4">
+                        <div className="label">
+                            <span className="label-text">Pick Hero image</span>
+                        </div>
+                        <input type="file" accept="image/*" onChange={(e) => {
+                            const file = e.target.files && e.target.files[0];
+                            if (file) {
+                                setMedia(file);
+                            }
+                        }} className="file-input file-input-bordered w-full max-w-xs" />
+                        {media && <Image src={URL.createObjectURL(media)} alt="img" width={400} height={200} className='mt-4' />}
+                    </label>
 
-                    <label className="form-control w-full max-w-xs">
+                    <label className="form-control w-full max-w-xs my-4">
                         <div className="label">
                             <span className="label-text">Pick the Category</span>
                         </div>
@@ -87,13 +92,14 @@ export default function page() {
                         </select>
 
                     </label>
+
                     <label className="form-control">
                         <div className="label">
                             <span className="label-text">Content</span>
                         </div>
                         <textarea value={content} onChange={(e) => setContent(e.target.value)} className="textarea textarea-bordered h-24" placeholder="Content"></textarea>
                     </label>
-                    <button className="btn btn-neutral" disabled={submitting}>Publish</button>
+                    <button className="btn btn-neutral my-8" disabled={submitting}>Publish</button>
                 </form>
             </div>
         </main>

@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import PageInfo from '../pageInfo/PageInfo'
+import PageInfo from '../common/pageInfo/PageInfo'
 import PostOverlayCard from '../common/card/PostOverlayCard'
 import PostCard from '../common/card/PostCard'
 import { useBlogContext } from '@/context/blog'
@@ -15,7 +15,9 @@ export default function Explore() {
     return (
         <>
             {myBlogs.length == 0 ?
-                <span className="loading loading-spinner loading-lg"></span>
+                <section className="h-screen flex justify-center items-center">
+                    <progress className="progress w-12"></progress>
+                </section>
                 :
                 <div className="container mx-auto">
                     <section>
