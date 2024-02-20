@@ -4,7 +4,7 @@ export interface IBlog {
     content: string,
     author?: IUser,
     mediaUrl?: string,
-    tag: string,
+    tag?: string,
     createdAt?: string,
     updatedAt?: string,
     comments?: IComment[]

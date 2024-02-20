@@ -2,217 +2,107 @@
 import { useBlogContext } from '@/context/blog'
 import { IBlog } from '@/data/interfaces'
 import moment from 'moment'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
-export default function FullBlog({ id }) {
-    const [blog, setBlog] = useState<IBlog>()
-    const { getBlog } = useBlogContext()
+type props = {
+   blog: IBlog,
+   setBlog: React.Dispatch<React.SetStateAction<IBlog>>,
+   isEdit: boolean,
+   handleEdit: () => {}
+}
 
-    useEffect(() => {
-        async function getThisBlog() {
-            if (id) {
-                let temp = await getBlog(String(id))
-                console.log("temp=", temp)
-                setBlog(temp)
-            }
-        }
-        getThisBlog()
-        console.log("id=", id)
+export default function FullBlog({ blog, setBlog, isEdit, handleEdit }: props) {
+   const [isAuthor, setIsAuthor] = useState(false)
+   const { data: session } = useSession()
 
-    }, [id])
+   useEffect(() => {
+      if (session && blog._id && session?.user?.id === blog.author?._id) {
+         setIsAuthor(true)
+      } else {
+         setIsAuthor(false)
+      }
+      console.log("isAuthor=", session, blog, isAuthor)
+   }, [session])
 
-
-    if (!blog) {
-        return <section className="h-screen flex justify-center items-center">
-            <progress className="progress w-12"></progress>
-        </section>
-    }
-    return (
-        <section>
-            <div className="container mx-auto px-5 md:px-0 w-full md:w-10/12 lg:w-5/12 font-work">
-                <div className="py-5">
-                    <div className="w-fit text-white px-2.5 py-1 bg-primary text-xs md:text-sm rounded-md mb-2 md:mb-4 font-medium">
-                        {blog.tag}
-                    </div>
-                    <h3 className="text-base-content font-semibold text-xl md:text-2xl lg:text-4xl leading-5 md:leading-10 ">
-                        {blog.title}
-                    </h3>
-                    <div className="mt-3 md:mt-6 flex items-center gap-5 text-base-content/60">
-                        <div className=" flex items-center gap-3">
-                            <div className="avatar">
-                                <div className="w-9 rounded-full">
-                                    <Image
-                                        src={`${blog.author?.image}`}
-                                        alt="avatar"
-                                        width={100}
-                                        height={100}
-                                    />
-                                </div>
-                            </div>
-                            <a
-                                href="/"
-                                className=" text-xs md:text-sm font-medium hover:text-primary transition hover:duration-300"
-                            >
-                                {blog.author?.username}
-                            </a>
+   const onChange = (e: any) => {
+      setBlog({
+         ...blog,
+         [e.target.name]: e.target.value
+      })
+   }
+   if (!blog.mediaUrl) {
+      return <section className="h-screen flex justify-center items-center">
+         <progress className="progress w-12"></progress>
+      </section>
+   }
+   return (
+      <section>
+         <div className="container mx-auto px-5 md:px-0 w-full md:w-10/12 lg:w-5/12 font-work">
+            <div className="py-5">
+               {isAuthor &&
+                  <span className="float-right cursor-pointer" onClick={handleEdit}>
+                     {isEdit ?
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                           <path d="M11.47 1.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1-1.06 1.06l-1.72-1.72V7.5h-1.5V4.06L9.53 5.78a.75.75 0 0 1-1.06-1.06l3-3ZM11.25 7.5V15a.75.75 0 0 0 1.5 0V7.5h3.75a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3h3.75Z" />
+                        </svg>
+                        :
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                           <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                        </svg>
+                     }
+                  </span>}
+               <div className="w-fit text-white px-2.5 py-1 bg-primary text-xs md:text-sm rounded-md mb-2 md:mb-4 font-medium">
+                  {blog.tag}
+               </div>
+               {isEdit ?
+                  <input type="text" name='title' value={blog.title} onChange={onChange} className="text-3xl font-semibold input input-bordered input-lg px-3 w-full" />
+                  :
+                  <h3 className="text-base-content font-semibold text-xl md:text-2xl lg:text-4xl leading-5 md:leading-10 ">
+                     {blog.title}
+                  </h3>
+               }
+               <div className="mt-3 md:mt-6 flex items-center gap-5 text-base-content/60">
+                  <div className=" flex items-center gap-3">
+                     <div className="avatar">
+                        <div className="w-9 rounded-full">
+                           <Image
+                              src={`${blog.author?.image}`}
+                              alt="avatar"
+                              width={100}
+                              height={100}
+                           />
                         </div>
-                        <p className="text-xs md:text-sm">{moment(blog.updatedAt).format('MMMM D, YYYY')}</p>
-                    </div>
-                </div>
-                <div className="mt-4">
-                    <Image
-                        width="800"
-                        height="462"
-                        alt={`blog_image`}
-                        className={`rounded-xl`}
-                        src={`${blog.mediaUrl}`}
-                    />
-                </div>
-
-                {/* article section start  */}
-                <div className="my-8">
-                    {blog.content}
-                    {/* <div className="mt-8">
-                    <p className="text-xl leading-8 text-base-content/80">
-                       Traveling is an enriching experience that opens up new
-                       horizons, exposes us to different cultures, and creates
-                       memories that last a lifetime. However, traveling can
-                       also be stressful and overwhelming, especially if you
-                       dont plan and prepare adequately. In this blog article,
-                       well explore tips and tricks for a memorable journey and
-                       how to make the most of your travels. <br /> <br /> One
-                       of the most rewarding aspects of traveling is immersing
-                       yourself in the local culture and customs. This includes
-                       trying local cuisine, attending cultural events and
-                       festivals, and interacting with locals. Learning a few
-                       phrases in the local language can also go a long way in
-                       making connections and showing respect.
-                    </p>
-                    <h5 className="text-2xl leading-7 text-base-content font-semibold mt-8 mb-4">
-                       Research Your Destination
-                    </h5>
-                    <p className="text-xl leading-8 text-base-content/80">
-                       Traveling is an enriching experience that opens up new
-                       horizons, exposes us to different cultures, and creates
-                       memories that last a lifetime. However, traveling can
-                       also be stressful and overwhelming, especially if you
-                       dont plan and prepare adequately. In this blog article,
-                       well explore tips and tricks for a memorable journey and
-                       how to make the most of your travels. <br /> <br /> One
-                       of the most rewarding aspects of traveling is immersing
-                       yourself in the local culture and customs. This includes
-                       trying local cuisine, attending cultural events and
-                       festivals, and interacting with locals. Learning a few
-                       phrases in the local language can also go a long way in
-                       making connections and showing respect.
-                    </p>
-                    <h5 className="text-2xl leading-7 text-base-content font-semibold mt-8 mb-4">
-                       Plan Your Itinerary
-                    </h5>
-                    <p className="text-xl leading-8 text-base-content/80">
-                       Traveling is an enriching experience that opens up new
-                       horizons, exposes us to different cultures, and creates
-                       memories that last a lifetime. However, traveling can
-                       also be stressful and overwhelming, especially if you
-                       dont plan and prepare adequately. In this blog article,
-                       well explore tips and tricks for a memorable journey and
-                       how to make the most of your travels. <br /> <br /> One
-                       of the most rewarding aspects of traveling is immersing
-                       yourself in the local culture and customs. This includes
-                       trying local cuisine, attending cultural events and
-                       festivals, and interacting with locals. Learning a few
-                       phrases in the local language can also go a long way in
-                       making connections and showing respect.
-                    </p>
-                 </div>
-                 <div className="p-8 bg-base-200 rounded-xl border-l-4  border-base-content/10 mt-8">
-                    <p className="text-base-content italic text-2xl">
-                       “ Traveling can expose you to new environments and
-                       potential health risks, so its crucial to take
-                       precautions to stay safe and healthy. ”
-                    </p>
-                 </div>
-                 <div className="mt-8">
-                    <img
-                       width="800"
-                       height="462"
-                       alt={`blog_image`}
-                       className={`rounded-xl`}
-                       src="https://placehold.it/800x462"
-                    />
-                 </div>
-                 <div className="flex items-center justify-center my-8 font-work">
-                    <div className="py-4 bg-base-content/10 text-base-content/60 text-center rounded-xl w-11/12">
-                       <p className="text-sm">Advertisement</p>
-                       <h6 className="text-xl font-semibold leading-[24px]">
-                          You can place ads
-                       </h6>
-                       <p className="text-lg leading-[26px]">750x100</p>
-                    </div>
-                 </div>
-                 <div className="mb-20">
-                    <h5 className="text-2xl leading-7 text-base-content font-semibold mb-4">
-                       Pack Lightly and Smartly
-                    </h5>
-                    <p className="text-xl leading-8 text-base-content/80">
-                       Packing can be a daunting task, but with some careful
-                       planning and smart choices, you can pack light and
-                       efficiently. Start by making a packing list and sticking
-                       to it, focusing on versatile and comfortable clothing
-                       that can be mixed and matched. Invest in quality luggage
-                       and packing organizers to maximize space and minimize
-                       wrinkles.
-                    </p>
-                    <h5 className="text-2xl leading-7 text-base-content font-semibold mt-8 mb-4">
-                       Stay Safe and Healthy
-                    </h5>
-                    <p className="text-xl leading-8 text-base-content/80">
-                       Packing can be a daunting task, but with some careful
-                       planning and smart choices, you can pack light and
-                       efficiently. Start by making a packing list and sticking
-                       to it, focusing on versatile and comfortable clothing
-                       that can be mixed and matched. Invest in quality luggage
-                       and packing organizers to maximize space and minimize
-                       wrinkles.
-                    </p>
-                    <h5 className="text-2xl leading-7 text-base-content font-semibold mt-8 mb-4">
-                       Immerse Yourself in the Local Culture
-                    </h5>
-                    <p className="text-xl leading-8 text-base-content/80">
-                       One of the most rewarding aspects of traveling is
-                       immersing yourself in the local culture and customs.
-                       This includes trying local cuisine, attending cultural
-                       events and festivals, and interacting with locals.
-                       Learning a few phrases in the local language can also go
-                       a long way in making connections and showing respect.
-                    </p>
-                    <h5 className="text-2xl leading-7 text-base-content font-semibold mt-8 mb-4">
-                       Capture Memories
-                    </h5>
-                    <p className="text-xl leading-8 text-base-content/80">
-                       Finally, dont forget to capture memories of your
-                       journey. Whether is through photographs, journaling, or
-                       souvenirs, preserving the moments and experiences of
-                       your travels can bring joy and nostalgia for years to
-                       come. However, its also essential to be present in the
-                       moment and not let technology distract you from the
-                       beauty of your surroundings.
-                    </p>
-                    <h5 className="text-2xl leading-7 text-base-content font-semibold mt-8 mb-4">
-                       Conclusion:
-                    </h5>
-                    <p className="text-xl leading-8 text-base-content/80">
-                       Traveling is an art form that requires a blend of
-                       planning, preparation, and spontaneity. By following
-                       these tips and tricks, you can make the most of your
-                       journey and create memories that last a lifetime. So
-                       pack your bags, embrace the adventure, and enjoy the
-                       ride.
-                    </p>
-                 </div> */}
-                </div>
+                     </div>
+                     <a
+                        href="/"
+                        className=" text-xs md:text-sm font-medium hover:text-primary transition hover:duration-300"
+                     >
+                        {blog.author?.username}
+                     </a>
+                  </div>
+                  <p className="text-xs md:text-sm">{moment(blog.updatedAt).format('MMMM D, YYYY')}</p>
+               </div>
             </div>
-        </section>
-    )
+            <div className="mt-4">
+               <Image
+                  width="800"
+                  height="462"
+                  alt={`blog_image`}
+                  className={`rounded-xl`}
+                  src={`${blog.mediaUrl}`}
+               />
+            </div>
+
+            <div className="my-8">
+               {isEdit ?
+                  <textarea value={blog.content} onChange={onChange} name='content' className="textarea textarea-bordered h-80 w-full" placeholder="Content"></textarea>
+                  :
+                  blog.content
+               }
+            </div>
+         </div>
+      </section>
+   )
 }

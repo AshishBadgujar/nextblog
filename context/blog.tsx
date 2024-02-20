@@ -78,7 +78,7 @@ export const BlogProvider = ({ children }: Props) => {
                 setBlogs((prevBlogs: any[]) => {
                     return prevBlogs.map(post => {
                         if (post._id === id) {
-                            return { ...post, ...temp };
+                            return { ...post, ...updatedBlog };
                         }
                         return post;
                     });
