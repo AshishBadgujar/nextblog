@@ -1,6 +1,5 @@
 import User from "@/models/user"
 import { connectDB } from "@/utils/database"
-import { NextApiRequest, NextApiResponse } from "next"
 
 export const GET = async (req: Request) => {
     try {

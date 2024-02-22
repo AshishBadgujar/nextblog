@@ -62,7 +62,7 @@ export default function page() {
                         <div className="label">
                             <span className="label-text">Title</span>
                         </div>
-                        <input type="text" placeholder="Type here" value={title} onChange={(e) => setTitle(e.target.value)} className="input input-bordered" />
+                        <input type="text" required placeholder="Type here" value={title} onChange={(e) => setTitle(e.target.value)} className="input input-bordered" />
                     </label>
                     <label className="form-control w-full max-w-xs my-4">
                         <div className="label">
@@ -97,7 +97,7 @@ export default function page() {
                         <div className="label">
                             <span className="label-text">Content</span>
                         </div>
-                        <textarea value={content} onChange={(e) => setContent(e.target.value)} className="textarea textarea-bordered h-24" placeholder="Content"></textarea>
+                        <textarea required value={content} onChange={(e) => setContent(e.target.value)} className="textarea textarea-bordered h-24" placeholder="Content"></textarea>
                     </label>
                     <button className="btn btn-neutral my-8" disabled={submitting}>Publish</button>
                 </form>

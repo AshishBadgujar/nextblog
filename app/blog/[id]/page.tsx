@@ -15,7 +15,7 @@ const page = () => {
    const editMode = searchParams.get('editMode')
 
    const [isEdit, setIsEdit] = useState<boolean>(JSON.parse(editMode || 'false'))
-   const { getBlog, editBlog } = useBlogContext()
+   const { getBlog, editBlog, deleteBlog } = useBlogContext()
    let mainBlog: IBlog = {
       title: '',
       content: ''
@@ -59,9 +59,18 @@ const page = () => {
       }
    }
 
+   const handleDelete = async () => {
+      if (id) {
+         let temp = await deleteBlog(String(blog._id))
+         if (temp) {
+            router.push('/')
+         }
+      }
+   }
+
    return (
       <main>
-         <FullBlog blog={blog} setBlog={setBlog} isEdit={isEdit} handleEdit={handleEdit} />
+         <FullBlog blog={blog} setBlog={setBlog} isEdit={isEdit} handleEdit={handleEdit} handleDelete={handleDelete} />
       </main>
    )
 }
