@@ -2,7 +2,6 @@ import { FooterDataOne, FooterDataTwo } from '@/data/footerData'
 import Link from 'next/link'
 import React from 'react'
 import NewsLetter from '@/components/common/newsletter/NewsLetter'
-import useMode from '@/utils/themeMode'
 import { Favicon } from '@/components/common/header'
 
 /**
@@ -14,8 +13,6 @@ import { Favicon } from '@/components/common/header'
  */
 
 const Footer = () => {
-   const { lightMode } = useMode()
-
    return (
       <footer className="bg-base-200 px-5 md:px-0 font-sans">
          <div className="container mx-auto">

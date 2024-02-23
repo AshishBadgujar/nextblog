@@ -12,7 +12,7 @@ module.exports = {
    },
 
    // add daisyUI plugin
-   plugins: ["@tailwindcss/typography", require("daisyui")],
+   plugins: [require('@tailwindcss/typography'), require("daisyui")],
 
    // daisyUI config (optional)
    daisyui: {

@@ -1,4 +1,6 @@
+"use client"
 import { headerData } from '@/data/headerData'
+import useMode from '@/utils/themeMode'
 import { getProviders, signIn, signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -18,6 +20,7 @@ interface SidebarLayoutProps {
 }
 
 const MobileNav = ({ sidebarOpen, setSidebarOpen }: SidebarLayoutProps) => {
+   const { theme, setTheme } = useMode()
    const { data: session } = useSession()
 
    const [providers, setProviders] = useState<any>(null)
@@ -75,6 +78,13 @@ const MobileNav = ({ sidebarOpen, setSidebarOpen }: SidebarLayoutProps) => {
                         {item.name}
                      </Link>
                   ))}
+                  <span className='cursor-pointer' onClick={() => {
+                     if (theme === 'light') {
+                        setTheme('dark')
+                     } else {
+                        setTheme('light')
+                     }
+                  }}>{theme == 'light' ? 'Dark Mode' : "Light Mode"}</span>
                   {session?.user ?
                      <button className="btn btn-neutral" onClick={() => signOut()}>Logout</button>
                      :

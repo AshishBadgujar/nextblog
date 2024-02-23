@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useBlogContext } from '@/context/blog';
+import TiptapEditor from '@/components/common/editor';
 
 export default function page() {
     const router = useRouter();
@@ -53,9 +54,14 @@ export default function page() {
     }
 
 
+    const handleContentChange = (newContent: any) => {
+        console.log("contet=", newContent)
+    };
+    const [data, setData] = useState();
+
     return (
         <main>
-            <div className="container mx-auto">
+            <div className="container mx-auto px-5 pb-12 md:px-0 w-full md:w-10/12 lg:w-5/12 font-work">
                 <form onSubmit={(e) => handleSubmit(e)} encType="multipart/form-data">
                     <h1 className='text-5xl font-bold my-8'>Write</h1>
                     <label className="form-control my-4">
@@ -93,13 +99,16 @@ export default function page() {
 
                     </label>
 
-                    <label className="form-control">
+                    {/* <label className="form-control">
                         <div className="label">
                             <span className="label-text">Content</span>
                         </div>
                         <textarea required value={content} onChange={(e) => setContent(e.target.value)} className="textarea textarea-bordered h-24" placeholder="Content"></textarea>
-                    </label>
+                    </label> */}
+                    <TiptapEditor />
                     <button className="btn btn-neutral my-8" disabled={submitting}>Publish</button>
+
+
                 </form>
             </div>
         </main>
