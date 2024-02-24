@@ -15,6 +15,8 @@ const handler = NextAuth({
             clientSecret: googleClientSecret
         })
     ],
+    secret: process.env.NEXTAUTH_SECRET,
+
     callbacks: {
         async session({ session }: { session: any }) {
             try {
