@@ -1,12 +1,10 @@
 import Blog from "@/models/blog"
 import { connectDB } from "@/utils/database"
-import { NextApiRequest, NextApiResponse } from "next"
 
 export const GET = async (req: Request, { params }) => {
     try {
         await connectDB()
-        const blogs = await Blog.find({ author: params.id }).populate('author')
-        console.log("prompts=", blogs)
+        const blogs = await Blog.find({ author: params.id }).populate('author').sort({ updatedAt: -1 })
         return new Response(JSON.stringify(blogs), { status: 200 })
     } catch (error) {
         console.log(error)
