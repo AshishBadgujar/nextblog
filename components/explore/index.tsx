@@ -19,7 +19,7 @@ export default function Explore() {
                     <progress className="progress w-12"></progress>
                 </section>
                 :
-                <div className="container mx-auto">
+                <div className="container mx-auto mt-12 mb-24 px-5 sm:px-0">
                     <section>
                         {/* <PageInfo /> */}
                     </section>

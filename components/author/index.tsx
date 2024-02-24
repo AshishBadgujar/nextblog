@@ -17,7 +17,7 @@ export default function AuthorComponent({ user, isEdit, setUser, handleEdit, han
                             <h3 className="text-base-content font-bold text-2xl mb-8">
                                 Latest Post
                             </h3>
-                            <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                                 {blogs.map(
                                     (item: any, index: number) => (
                                         <div key={index}>
