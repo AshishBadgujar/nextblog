@@ -45,7 +45,7 @@ const PostCard = ({ blog }: any) => {
                   </div>
                   <h5>
                      <Link
-                        href="/"
+                        href={`/author/${blog.author?._id}`}
                         className="text-base font-medium hover:text-primary transition hover:duration-300"
                      >
                         {blog.author?.username}

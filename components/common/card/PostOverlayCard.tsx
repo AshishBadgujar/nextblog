@@ -44,7 +44,7 @@ const PostOverlayCard = ({ blog }: any) => {
                   </div>
                   <h5>
                      <a
-                        href="/"
+                        href={`/author/${blog.author?._id}`}
                         className="text-xs md:text-base font-medium hover:text-primary transition hover:duration-300"
                      >
                         {blog.author?.username}

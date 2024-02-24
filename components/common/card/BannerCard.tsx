@@ -44,7 +44,7 @@ const BannerCard = ({ blog }: any) => {
                   </div>
                   <h6>
                      <Link
-                        href="/"
+                        href={`/author/${blog.author?._id}`}
                         className="text-base-content/60 text-xs md:text-base font-medium hover:text-primary transition hover:duration-300"
                      >
                         {blog.author?.username}

@@ -41,7 +41,7 @@ const MobileNav = ({ sidebarOpen, setSidebarOpen }: SidebarLayoutProps) => {
                      {session?.user &&
                         <div className="avatar cursor-pointer">
                            <div className="w-12 rounded-full">
-                              <Link href='/author'>
+                              <Link href={`/author/${session?.user.id}`}>
                                  <Image src={session?.user.image || ''} alt='' height={100} width={100} />
                               </Link>
                            </div>

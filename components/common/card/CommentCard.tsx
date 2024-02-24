@@ -17,7 +17,7 @@ export default function CommentCard({ comment, deleteComment, canDelete }: any) 
                         <div>
                             <h5>
                                 <Link
-                                    href="/"
+                                    href="#"
                                     className="text-base font-medium hover:text-primary transition hover:duration-300"
                                 >
                                     {comment.by?.username}

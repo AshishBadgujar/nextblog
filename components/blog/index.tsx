@@ -25,7 +25,6 @@ export default function FullBlog({ blog, setBlog, isEdit, handleEdit, handleDele
       } else {
          setIsAuthor(false)
       }
-      console.log("isAuthor=", session, blog, isAuthor)
    }, [session, blog])
 
    const onContentChange = (value: string) => {
@@ -100,7 +99,7 @@ export default function FullBlog({ blog, setBlog, isEdit, handleEdit, handleDele
                         </div>
                      </div>
                      <a
-                        href="/"
+                        href={`/author/${blog.author?._id}`}
                         className=" text-xs md:text-sm font-medium hover:text-primary transition hover:duration-300"
                      >
                         {blog.author?.username}

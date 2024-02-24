@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { IUser } from '@/data/interfaces'
 import { useSession } from 'next-auth/react'
 
 /**

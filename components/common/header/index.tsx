@@ -2,12 +2,11 @@
 import React from 'react'
 import Link from 'next/link'
 import { headerData } from '@/data/headerData'
-import useMode from '@/context/themeMode'
 import MobileNav from './MobileNav'
 import Image from 'next/image'
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react'
 import { useState, useEffect } from "react";
-import { useTheme } from 'next-themes'
+
 /**
  * Our Header is a reusable UI component that used to represent top navbar section of any website.
  *
@@ -54,7 +53,7 @@ const Header = () => {
                </nav>
                <div className="flex items-center justify-end xl:justify-end gap-10 col-span-9 xl:col-span-3">
                   {/* Search Block */}
-                  <div className="pl-4 pr-3 py-2 rounded-md hidden sm:flex items-center gap-4">
+                  <div className="pl-4 pr-3 py-2 rounded-md hidden sm:flex items-center gap-4" >
                      <svg
                         className="cursor-pointer"
                         width="16"
@@ -89,7 +88,7 @@ const Header = () => {
                            </div>
                         </div>
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                           <li> <Link href='/author'>Profile</Link></li>
+                           <li> <Link href={`/author/${session?.user.id}`}>Profile</Link></li>
                            <li><button role='button' className='btn btn-neutral text-neutral-content' onClick={() => signOut()}>Logout</button></li>
                         </ul>
                      </div>
