@@ -11,6 +11,7 @@ import { UserProvider } from '@/context/user'
 import { CommentProvider } from '@/context/comment'
 import { ThemeProvider, } from 'next-themes'
 
+export const fetchCache = 'force-no-store';
 
 export default function RootLayout({
    children,

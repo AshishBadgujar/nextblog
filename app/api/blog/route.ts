@@ -1,6 +1,6 @@
 import Blog from "@/models/blog"
 import { connectDB } from "@/utils/database"
-
+export const fetchCache = 'force-no-store';
 export const GET = async (req: Request, res: Response) => {
     try {
         await connectDB()

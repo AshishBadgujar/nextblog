@@ -31,7 +31,7 @@ export const UserProvider = ({ children }: Props) => {
     const [users, setUsers] = useState<IUser[]>([])
 
     async function getData() {
-        const res = await fetch('/api/user', { cache: 'no-cache' })
+        const res = await fetch('/api/user')
         if (!res.ok) {
             throw new Error('Failed to fetch data')
         }

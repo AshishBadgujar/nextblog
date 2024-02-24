@@ -30,7 +30,7 @@ export const BlogProvider = ({ children }: Props) => {
     const [blogs, setBlogs] = useState<IBlog[]>([]);
 
     async function getData() {
-        const res = await fetch('/api/blog', { cache: 'no-cache' })
+        const res = await fetch('/api/blog')
         if (!res.ok) {
             throw new Error('Failed to fetch data')
         }
