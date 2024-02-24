@@ -28,7 +28,7 @@ export default function Comments({ currentUser, blog }: any) {
     }
 
     const canDelete = (commentById: string) => {
-        if (currentUser.id == blog.author._id || currentUser.id == commentById) {
+        if (currentUser?.id == blog.author._id || currentUser?.id == commentById) {
             return true
         } else {
             false
@@ -44,6 +44,8 @@ export default function Comments({ currentUser, blog }: any) {
                     <button className="btn btn-neutral mt-4" onClick={onComment}>Post</button>
                 </div>
             }
+            <h3 className='font-semibold text-2xl mb-4'>
+                What People Says</h3>
             {comments.length > 0 ?
                 comments.map((item: IComment, index: number) => <CommentCard key={index} comment={item} deleteComment={deleteThisComment} canDelete={canDelete} />)
                 :

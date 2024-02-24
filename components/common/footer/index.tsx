@@ -1,8 +1,11 @@
+"use client"
 import { FooterDataOne, FooterDataTwo } from '@/data/footerData'
 import Link from 'next/link'
 import React from 'react'
 import NewsLetter from '@/components/common/newsletter/NewsLetter'
 import { Favicon } from '@/components/common/header'
+import { useTheme } from 'next-themes'
+import dynamic from "next/dynamic";
 
 /**
  * Our Footer is a reusable UI component that used to represent bottom section of any website.
@@ -13,6 +16,8 @@ import { Favicon } from '@/components/common/header'
  */
 
 const Footer = () => {
+   const { theme, setTheme } = useTheme()
+
    return (
       <footer className="bg-base-200 px-5 md:px-0 font-sans">
          <div className="container mx-auto">
@@ -65,6 +70,11 @@ const Footer = () => {
                               </Link>
                            </div>
                         ))}
+                        {theme == 'light' ?
+                           <button onClick={() => setTheme('dark')} className="btn btn-sm"><i className="ri-moon-fill mr-2"></i> Dark</button>
+                           :
+                           <button onClick={() => setTheme('light')} className="btn btn-sm btn-info"><i className="ri-sun-fill mr-2"></i> Light</button>
+                        }
                      </div>
                   </div>
                   <div>
@@ -128,5 +138,6 @@ const Footer = () => {
       </footer>
    )
 }
+export default dynamic(() => Promise.resolve(Footer), { ssr: false })
 
-export default Footer
+// export default Footer

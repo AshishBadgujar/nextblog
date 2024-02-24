@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import Comments from '../common/comment'
+import TiptapEditor from '../common/editor'
 
 type props = {
    blog: IBlog,
@@ -27,6 +28,12 @@ export default function FullBlog({ blog, setBlog, isEdit, handleEdit, handleDele
       console.log("isAuthor=", session, blog, isAuthor)
    }, [session, blog])
 
+   const onContentChange = (value: string) => {
+      setBlog({
+         ...blog,
+         content: value
+      })
+   }
    const onChange = (e: any) => {
       setBlog({
          ...blog,
@@ -114,12 +121,13 @@ export default function FullBlog({ blog, setBlog, isEdit, handleEdit, handleDele
 
             <div className="py-8">
                {isEdit ?
-                  <textarea value={blog.content} onChange={onChange} name='content' className="textarea textarea-bordered h-80 w-full" placeholder="Content"></textarea>
+                  <TiptapEditor content={blog.content} setContent={onContentChange} />
                   :
-                  blog.content
+                  <div className='tiptap' dangerouslySetInnerHTML={{ __html: blog.content }} style={{ whiteSpace: 'pre-wrap' }} />
                }
             </div>
-            <div className="divider"></div>
+
+            <br /><br />
             <Comments currentUser={session?.user} blog={blog} />
          </div>
       </section >

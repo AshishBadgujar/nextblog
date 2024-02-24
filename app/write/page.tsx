@@ -66,13 +66,13 @@ export default function page() {
                     <h1 className='text-5xl font-bold my-8'>Write</h1>
                     <label className="form-control my-4">
                         <div className="label">
-                            <span className="label-text">Title</span>
+                            <span className="label-text">Title Your blog</span>
                         </div>
                         <input type="text" required placeholder="Type here" value={title} onChange={(e) => setTitle(e.target.value)} className="input input-bordered" />
                     </label>
                     <label className="form-control w-full max-w-xs my-4">
                         <div className="label">
-                            <span className="label-text">Pick Hero image</span>
+                            <span className="label-text">Pick Hero Image</span>
                         </div>
                         <input type="file" accept="image/*" onChange={(e) => {
                             const file = e.target.files && e.target.files[0];
@@ -85,7 +85,7 @@ export default function page() {
 
                     <label className="form-control w-full max-w-xs my-4">
                         <div className="label">
-                            <span className="label-text">Pick the Category</span>
+                            <span className="label-text">Pick The Category</span>
                         </div>
                         <select className="select select-bordered" value={tag} onChange={(e) => setTag(e.target.value)}>
                             <option disabled value=''>Pick one</option>
@@ -96,16 +96,13 @@ export default function page() {
                             <option value="Technology">Technology</option>
                             <option value="Others">Others</option>
                         </select>
-
                     </label>
 
-                    {/* <label className="form-control">
-                        <div className="label">
-                            <span className="label-text">Content</span>
-                        </div>
-                        <textarea required value={content} onChange={(e) => setContent(e.target.value)} className="textarea textarea-bordered h-24" placeholder="Content"></textarea>
-                    </label> */}
-                    <TiptapEditor />
+                    <div className="label">
+                        <span className="label-text">Write Content</span>
+                    </div>
+                    <TiptapEditor content={content} setContent={setContent} />
+
                     <button className="btn btn-neutral my-8" disabled={submitting}>Publish</button>
 
 

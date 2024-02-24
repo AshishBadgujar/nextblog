@@ -6,7 +6,7 @@ import React from 'react'
 export default function CommentCard({ comment, deleteComment, canDelete }: any) {
     return (
         <div className="card w-full mb-2 border border-base-content/10 rounded-xl font-work">
-            <div className="card-body">
+            <div className="card-body gap-4">
                 <div className="flex items-center justify-between gap-5 text-base-content/60 ">
                     <div className=" flex items-center gap-3">
                         <div className="avatar">

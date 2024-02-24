@@ -21,7 +21,7 @@ export default function Explore() {
                 :
                 <div className="container mx-auto">
                     <section>
-                        <PageInfo />
+                        {/* <PageInfo /> */}
                     </section>
 
                     <section className="my-12">
