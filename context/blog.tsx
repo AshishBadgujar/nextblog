@@ -30,7 +30,7 @@ export const BlogProvider = ({ children }: Props) => {
     const [blogs, setBlogs] = useState<IBlog[]>([]);
 
     async function getData() {
-        const res = await fetch('/api/blog', { cache: 'no-store' })
+        const res = await fetch('/api/blog', { cache: 'no-cache' })
         if (!res.ok) {
             throw new Error('Failed to fetch data')
         }
@@ -59,7 +59,7 @@ export const BlogProvider = ({ children }: Props) => {
         }
     }
     const getBlog = async (id: string) => {
-        const res = await fetch(`/api/blog/${id}`, { cache: 'no-store' })
+        const res = await fetch(`/api/blog/${id}`, { cache: 'no-cache' })
         if (!res.ok) {
             throw new Error('Failed to fetch data')
         }
