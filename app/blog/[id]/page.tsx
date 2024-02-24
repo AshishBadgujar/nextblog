@@ -5,7 +5,7 @@ import FullBlog from '@/components/blog'
 import { IBlog } from '@/data/interfaces'
 import { useBlogContext } from '@/context/blog'
 
-const page = () => {
+const Page = () => {
    const params = useParams()
    const router = useRouter()
    const pathname = usePathname()
@@ -75,4 +75,4 @@ const page = () => {
    )
 }
 
-export default page
+export default Page

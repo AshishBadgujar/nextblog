@@ -7,6 +7,7 @@ import { connectDB } from "@/utils/database";
 const googleClientId = process.env.GOOGLE_ID ?? '';
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET ?? '';
 
+
 const handler = NextAuth({
     providers: [
         GoogleProvider({
@@ -31,11 +32,11 @@ const handler = NextAuth({
                     email: profile?.email
                 });
 
-                if (!userExists) {
+                if (!userExists && profile) {
                     await User.create({
                         email: profile?.email,
                         username: profile?.name?.replace(" ", "").toLowerCase(),
-                        image: profile?.picture
+                        image: 'picture' in profile ? profile.picture : 'https://pcgacademia.pl/wp-content/themes/pcgacademia-child/images/png/avatar-placeholder.png'
                     });
                 }
                 return true;

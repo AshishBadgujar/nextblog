@@ -25,7 +25,6 @@ const AuthorInfo = ({ isEdit, user, setUser, handleEdit, handleDelete }: any) =>
       } else {
          setIsAuthor(false)
       }
-      console.log("isAuthor=", session, user, isAuthor)
    }, [session, user])
 
    const onChange = (e: any) => {
@@ -100,7 +99,7 @@ const AuthorInfo = ({ isEdit, user, setUser, handleEdit, handleDelete }: any) =>
 
             <div className="flex items-center justify-center gap-2">
                {isEdit && socialShare?.map((item, index) => (
-                  <label className="input input-bordered flex items-center gap-2">
+                  <label key={index} className="input input-bordered flex items-center gap-2">
                      {item?.icon()}
                      <input type="text" name={item.key} value={user[item.key]} onChange={onChange} className="outline-none grow" placeholder="https://example.com" />
                   </label>

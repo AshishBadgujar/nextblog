@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useBlogContext } from '@/context/blog';
 import TiptapEditor from '@/components/common/editor';
 
-export default function page() {
+export default function Page() {
     const router = useRouter();
     const { addBlog } = useBlogContext()
     const [title, setTitle] = useState('')

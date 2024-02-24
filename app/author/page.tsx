@@ -1,6 +1,4 @@
 import AuthorComponent from '@/components/author'
-import AuthorInfo from '@/components/common/card/AuthorInfo'
-import PostCard from '@/components/common/card/PostCard'
 
 import React from 'react'
 

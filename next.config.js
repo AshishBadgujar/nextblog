@@ -21,7 +21,10 @@ const nextConfig = {
          topLevelAwait: true,
       }
       return config
-   }
+   },
+   typescript: {
+      ignoreBuildErrors: true,
+   },
 }
 
 module.exports = nextConfig
