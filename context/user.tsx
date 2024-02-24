@@ -31,7 +31,7 @@ export const UserProvider = ({ children }: Props) => {
     const [users, setUsers] = useState<IUser[]>([])
 
     async function getData() {
-        const res = await fetch('/api/user')
+        const res = await fetch('/api/user', { cache: 'no-store' })
         if (!res.ok) {
             throw new Error('Failed to fetch data')
         }
@@ -44,7 +44,7 @@ export const UserProvider = ({ children }: Props) => {
     }, [])
 
     const getUser = async (id: string) => {
-        const res = await fetch(`/api/user/${id}`)
+        const res = await fetch(`/api/user/${id}`, { cache: 'no-store' })
         if (!res.ok) {
             throw new Error('Failed to fetch data')
         }
@@ -52,7 +52,7 @@ export const UserProvider = ({ children }: Props) => {
         return temp
     }
     const getBlogsByUserId = async (id: string) => {
-        const res = await fetch(`/api/user/${id}/blogs`)
+        const res = await fetch(`/api/user/${id}/blogs`, { cache: 'no-store' })
         if (!res.ok) {
             throw new Error('Failed to fetch data')
         }

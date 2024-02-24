@@ -23,7 +23,6 @@ type Props = {
 
 export const CommentProvider = ({ children }: Props) => {
     const addComment = async (newComment: any) => {
-        console.log("data=", newComment)
         try {
             const response = await fetch("/api/comment/new", {
                 method: "POST",
