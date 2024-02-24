@@ -1,4 +1,3 @@
-import React from 'react'
 import Explore from '@/components/explore'
 
 export const metadata = {
