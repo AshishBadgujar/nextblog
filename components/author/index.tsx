@@ -1,5 +1,5 @@
 "use client"
-import React, from 'react'
+import React from 'react'
 import AuthorInfo from '../common/card/AuthorInfo'
 import PostCard from '../common/card/PostCard'
 
