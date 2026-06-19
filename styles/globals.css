@@ -20,7 +20,6 @@
    --glass-bg: rgba(0, 0, 0, 0.15);
    --nav-bg: rgba(0, 0, 0, 0.25);
    --panel-bg: rgba(18, 18, 18, 0.6);
-   --scrim: rgba(0, 0, 0, 0.55);
    --hover: rgba(255, 255, 255, 0.08);
    --hover-soft: rgba(255, 255, 255, 0.06);
    --active: rgba(255, 255, 255, 0.16);
@@ -61,7 +60,6 @@
    --glass-bg: rgba(255, 255, 255, 0.5);
    --nav-bg: rgba(255, 255, 255, 0.6);
    --panel-bg: rgba(255, 255, 255, 0.7);
-   --scrim: rgba(0, 0, 0, 0.3);
    --hover: rgba(0, 0, 0, 0.05);
    --hover-soft: rgba(0, 0, 0, 0.04);
    --active: rgba(0, 0, 0, 0.1);
@@ -369,9 +367,6 @@ button {
    padding: 0.45rem 0.9rem;
    font-size: 0.78rem;
 }
-.btn--header {
-   display: none;
-}
 .icon-btn {
    display: inline-flex;
    align-items: center;
@@ -564,65 +559,6 @@ button {
    width: 1.15rem;
    height: 1.15rem;
 }
-.menu-btn {
-   display: inline-flex;
-   align-items: center;
-   justify-content: center;
-   width: 2.4rem;
-   height: 2.4rem;
-   border: 0;
-   border-radius: 50%;
-   background: transparent;
-   color: var(--text);
-   cursor: pointer;
-}
-.menu-btn svg {
-   width: 1.4rem;
-   height: 1.4rem;
-}
-
-/* -------------------------- Mobile drawer ----------------------- */
-.drawer {
-   position: fixed;
-   top: 0;
-   left: -100%;
-   z-index: 40;
-   display: flex;
-   height: 100vh;
-   width: 100%;
-   max-width: 290px;
-   flex-direction: column;
-   gap: 1.1rem;
-   padding: 1.5rem 1.25rem;
-   transition: left 0.3s ease;
-}
-.drawer.is-open {
-   left: 0;
-}
-.drawer__head {
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   margin-bottom: 0.5rem;
-}
-.drawer a {
-   color: var(--muted-strong);
-   font-family: var(--mono);
-   text-transform: uppercase;
-   letter-spacing: 0.14em;
-   font-size: 0.8rem;
-}
-.drawer a:hover {
-   color: var(--text);
-}
-.scrim {
-   position: fixed;
-   inset: 0;
-   z-index: 30;
-   background: var(--scrim);
-   backdrop-filter: blur(2px);
-}
-
 /* ------------------------- Feature card ------------------------- */
 .feature-card {
    margin-bottom: 1.5rem;
@@ -970,18 +906,6 @@ button {
    background: var(--active);
 }
 
-/* --------------------------- Responsive ------------------------- */
-@media (min-width: 1180px) {
-   .btn--header {
-      display: inline-flex;
-   }
-   .menu-btn {
-      display: none;
-   }
-   .mobile-nav {
-      display: none;
-   }
-}
 
 
 /* ====================================================================
