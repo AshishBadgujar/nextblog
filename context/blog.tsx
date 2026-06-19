@@ -1,124 +1,87 @@
 'use client'
-import { IBlog } from '@/data/interfaces'
-import React, { ReactNode, useContext, useEffect } from 'react'
-import { createContext, useState } from 'react'
+import {
+   createContext,
+   useCallback,
+   useContext,
+   useEffect,
+   useState,
+   type ReactNode,
+} from 'react'
+import type { IBlog } from '@/types'
 
-
-type postContextType = {
-    blogs: IBlog[],
-    getData: () => any;
-    getBlog: (id: string) => any
-    addBlog: (newBlog: any) => any;
-    editBlog: (id: string, updatedBlog: any) => any;
-    deleteBlog: (id: string) => any;
+type BlogContextType = {
+   blogs: IBlog[]
+   loading: boolean
+   refresh: () => Promise<IBlog[]>
+   getBlog: (id: string) => Promise<IBlog | null>
+   addBlog: (blog: Partial<IBlog>) => Promise<IBlog | null>
+   editBlog: (id: string, blog: Partial<IBlog>) => Promise<IBlog | null>
+   deleteBlog: (id: string) => Promise<boolean>
 }
 
-const postContextDefaultValues: postContextType = {
-    blogs: [],
-    getData: () => { },
-    getBlog: () => { },
-    addBlog: () => { },
-    editBlog: () => { },
-    deleteBlog: () => { },
-}
-const BlogContext = createContext<postContextType>(postContextDefaultValues)
-type Props = {
-    children: ReactNode;
-}
+const BlogContext = createContext<BlogContextType | null>(null)
 
-export const BlogProvider = ({ children }: Props) => {
-    const [blogs, setBlogs] = useState<IBlog[]>([]);
+export function BlogProvider({ children }: { children: ReactNode }) {
+   const [blogs, setBlogs] = useState<IBlog[]>([])
+   const [loading, setLoading] = useState(true)
 
-    async function getData() {
-        const res = await fetch('/api/blog', { cache: 'reload' })
-        if (!res.ok) {
-            throw new Error('Failed to fetch data')
-        }
-        let temp = await res.json()
-        setBlogs(temp)
-        return temp
-    }
-    useEffect(() => {
-        getData()
-    }, [])
+   async function refresh() {
+      const res = await fetch('/api/blog', { cache: 'no-store' })
+      const data: IBlog[] = res.ok ? await res.json() : []
+      setBlogs(data)
+      setLoading(false)
+      return data
+   }
 
-    const addBlog = async (newBlog: any) => {
-        try {
-            const response = await fetch("/api/blog/new", {
-                method: "POST",
-                body: JSON.stringify(newBlog)
-            })
-            if (response.ok) {
-                let temp = await response.json()
-                getData()
-                return temp
-            }
-        } catch (error) {
-            console.log(error)
-            return null
-        }
-    }
-    const getBlog = async (id: string) => {
-        const res = await fetch(`/api/blog/${id}`)
-        if (!res.ok) {
-            throw new Error('Failed to fetch data')
-        }
-        let temp = await res.json()
-        return temp
-    }
+   useEffect(() => {
+      refresh()
+   }, [])
 
-    const editBlog = async (id: string, updatedBlog: any) => {
-        try {
-            const response = await fetch(`/api/blog/${id}`, {
-                method: "PATCH",
-                body: JSON.stringify(updatedBlog)
-            })
-            if (response.ok) {
-                let temp = await response.json()
-                setBlogs((prevBlogs: any[]) => {
-                    return prevBlogs.map(post => {
-                        if (post._id === id) {
-                            return { ...post, ...updatedBlog };
-                        }
-                        return post;
-                    });
-                });
-                return temp
-            }
-        } catch (error) {
-            console.log(error)
-            return null
-        }
-    }
+   async function getBlog(id: string) {
+      const res = await fetch(`/api/blog/${id}`, { cache: 'no-store' })
+      return res.ok ? ((await res.json()) as IBlog) : null
+   }
 
-    const deleteBlog = async (id: string) => {
-        try {
-            const response = await fetch(`/api/blog/${id}`, {
-                method: "DELETE",
-            })
-            if (response.ok) {
-                const updatedBlogs = blogs.filter((post: any) => post._id !== id);
-                setBlogs(updatedBlogs);
-                return true
-            }
-        } catch (error) {
-            console.log(error)
-            return false
-        }
-    }
+   async function addBlog(blog: Partial<IBlog>) {
+      const res = await fetch('/api/blog', {
+         method: 'POST',
+         body: JSON.stringify(blog),
+      })
+      if (!res.ok) return null
+      const created: IBlog = await res.json()
+      await refresh()
+      return created
+   }
 
-    return (
-        <BlogContext.Provider value={{
-            blogs,
-            getData,
-            getBlog,
-            addBlog,
-            editBlog,
-            deleteBlog
-        }}>
-            {children}
-        </BlogContext.Provider>
-    )
+   async function editBlog(id: string, blog: Partial<IBlog>) {
+      const res = await fetch(`/api/blog/${id}`, {
+         method: 'PATCH',
+         body: JSON.stringify(blog),
+      })
+      if (!res.ok) return null
+      const updated: IBlog = await res.json()
+      setBlogs((prev) => prev.map((b) => (b.id === id ? { ...b, ...updated } : b)))
+      return updated
+   }
+
+   async function deleteBlog(id: string) {
+      const res = await fetch(`/api/blog/${id}`, { method: 'DELETE' })
+      if (!res.ok) return false
+      setBlogs((prev) => prev.filter((b) => b.id !== id))
+      return true
+   }
+
+   return (
+      <BlogContext.Provider
+         value={{ blogs, loading, refresh, getBlog, addBlog, editBlog, deleteBlog }}
+      >
+         {children}
+      </BlogContext.Provider>
+   )
 }
 
-export const useBlogContext = () => useContext(BlogContext)
+export function useBlogContext() {
+   const ctx = useContext(BlogContext)
+   if (!ctx) throw new Error('useBlogContext must be used within BlogProvider')
+   return ctx
+}

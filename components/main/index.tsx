@@ -1,49 +1,95 @@
-"use client"
-import React, { useEffect, useState } from 'react'
-import BannerCard from '../common/card/BannerCard'
-import PostCard from '../common/card/PostCard'
+'use client'
 import Link from 'next/link'
+import Hero from '../common/hero/Hero'
+import FeatureCard from '../common/card/FeatureCard'
+import PostCard from '../common/card/PostCard'
 import { useBlogContext } from '@/context/blog'
-import { IBlog } from '@/data/interfaces'
 
 export default function Feed() {
-    const { blogs } = useBlogContext()
-    const [myBlogs, setMyBlogs] = useState<IBlog[]>([])
-    useEffect(() => {
-        setMyBlogs(blogs)
-    }, [blogs])
-    return (
-        <>
-            {myBlogs.length == 0 ?
-                <section className="h-screen flex justify-center items-center">
-                    <progress className="progress w-12"></progress>
-                </section>
-                :
-                <div className='container mx-auto mt-12 mb-24 px-5 sm:px-0'>
-                    <section>
-                        <BannerCard blog={myBlogs[0]} />
-                    </section>
-                    <section className="my-20">
-                        <h3 className="text-base-content font-bold text-2xl mb-8 font-work leading-8">
-                            Latest Post
-                        </h3>
-                        <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                            {myBlogs.slice(1).map((item: any) => (
-                                <PostCard key={item} blog={item} />
-                            ))}
-                        </div>
-                        <div className="flex items-center justify-center w-full mt-8">
-                            <Link
-                                href={`/explore`}
-                                className="btn btn-outline btn-secondary text-secondary-content/60 font-work font-medium text-base"
-                            >
-                                View All Post
-                            </Link>
-                        </div>
-                    </section>
-                </div>
-            }
+   const { blogs, loading } = useBlogContext()
 
-        </>
-    )
+   if (loading) {
+      return (
+         <section className="state">
+            <span className="loader" />
+         </section>
+      )
+   }
+
+   if (blogs.length === 0) {
+      return (
+         <>
+            <Hero />
+            <section className="empty-state container">
+               <h2 className="display">
+                  Nothing here yet.
+                  <br />
+                  <span className="dim">Write the first post.</span>
+               </h2>
+               <Link href="/write" className="btn btn--solid">
+                  Write a post
+               </Link>
+            </section>
+         </>
+      )
+   }
+
+   const [lead, ...rest] = blogs
+   const indexPosts = blogs.slice(0, 6)
+   const remaining = blogs.length - indexPosts.length
+
+   return (
+      <>
+         <Hero />
+         <div className="container" id="latest">
+            <div className="home-grid">
+               <div className="home-main">
+                  <div className="section-head">
+                     <p className="eyebrow">
+                        <span className="eyebrow__num">01</span> Latest
+                     </p>
+                  </div>
+
+                  <FeatureCard blog={lead} />
+
+                  {rest.length > 0 && (
+                     <div className="home-posts">
+                        {rest.map((blog) => (
+                           <PostCard key={blog.id} blog={blog} />
+                        ))}
+                     </div>
+                  )}
+               </div>
+
+               <aside className="home-side">
+                  <p className="side-title">
+                     <span className="eyebrow__num">02</span> Index
+                  </p>
+                  <ol className="post-list">
+                     {indexPosts.map((blog, i) => (
+                        <li key={blog.id}>
+                           <Link href={`/blog/${blog.id}`} className="post-list__item">
+                              <span className="post-list__num">
+                                 {String(i + 1).padStart(2, '0')}
+                              </span>
+                              <span>
+                                 <span className="post-list__title">{blog.title}</span>
+                                 <span className="post-list__meta">
+                                    {blog.tag} · {blog.authorName}
+                                 </span>
+                              </span>
+                           </Link>
+                        </li>
+                     ))}
+                  </ol>
+                  {remaining > 0 && (
+                     <a href="#latest" className="post-list__more">
+                        +{remaining} more {remaining === 1 ? 'post' : 'posts'}
+                     </a>
+                  )}
+               </aside>
+            </div>
+         </div>
+      </>
+   )
 }

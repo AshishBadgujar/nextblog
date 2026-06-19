@@ -1,48 +1,44 @@
-'use client'
+import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
+import { Inter, JetBrains_Mono } from 'next/font/google'
 import '@/styles/globals.css'
 import '@/styles/tiptap.css'
 import 'remixicon/fonts/remixicon.css'
-import React from 'react'
 import Header from '@/components/common/header'
-import Footer from '@/components/common/footer'
-import AuthProvider from '@/utils/authProvider'
-import { BlogProvider } from '@/context/blog'
-import { UserProvider } from '@/context/user'
-import { CommentProvider } from '@/context/comment'
-import { ThemeProvider, } from 'next-themes'
+import Providers from './providers'
+import { BRAND } from '@/config/brand'
 
-export const fetchCache = 'force-no-store';
+const sans = Inter({
+   subsets: ['latin'],
+   weight: ['300', '400', '500', '600', '700', '800', '900'],
+   variable: '--font-sans',
+   display: 'swap',
+})
 
-export default function RootLayout({
-   children,
-}: {
-   children: React.ReactNode
-}) {
+const mono = JetBrains_Mono({
+   subsets: ['latin'],
+   weight: ['400', '500', '700'],
+   variable: '--font-mono',
+   display: 'swap',
+})
 
+export const metadata: Metadata = {
+   title: `${BRAND.name} — ${BRAND.tagline}`,
+   description: 'A fast, offline, black & white blogging space.',
+}
+
+// Applies the saved theme before first paint to avoid a flash of the wrong theme.
+const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}})()`
+
+export default function RootLayout({ children }: { children: ReactNode }) {
    return (
-      <html
-         lang="en"
-         suppressHydrationWarning
-      >
+      <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
          <body>
-            <ThemeProvider
-               themes={[
-                  'light',
-                  'dark'
-               ]}
-            >
-               <AuthProvider>
-                  <BlogProvider>
-                     <UserProvider>
-                        <CommentProvider>
-                           <Header />
-                           {children}
-                           <Footer />
-                        </CommentProvider>
-                     </UserProvider>
-                  </BlogProvider>
-               </AuthProvider>
-            </ThemeProvider>
+            <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+            <Providers>
+               <Header />
+               <main className="page">{children}</main>
+            </Providers>
          </body>
       </html>
    )

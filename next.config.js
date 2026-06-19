@@ -1,37 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-   experimental: {
-      serverComponentsExternalPackages: ["mongoose"],
-   },
    images: {
-      remotePatterns: [
-         {
-            protocol: "https",
-            hostname: "**",
-         },
-         {
-            protocol: "http",
-            hostname: "**",
-         },
-      ],
+      // We only serve local images (/uploads, /avatar.svg, /placeholder.svg).
+      dangerouslyAllowSVG: true,
+      contentDispositionType: 'attachment',
    },
-   webpack(config) {
-      config.experiments = {
-         ...config.experiments,
-         topLevelAwait: true,
-      }
-      return config
+   eslint: {
+      ignoreDuringBuilds: true,
    },
-   headers: () => [
-      {
-         source: '/:path*',
-         headers: [
-            {
-               key: 'Cache-Control',
-               value: 'no-store',
-            },
-         ],
-      },],
    typescript: {
       ignoreBuildErrors: true,
    },

@@ -1,58 +1,71 @@
-"use client"
+'use client'
+import { useEffect, useState } from 'react'
 import { useCommentContext } from '@/context/comment'
-import React, { useEffect, useState } from 'react'
 import CommentCard from '../card/CommentCard'
-import { IComment } from '@/data/interfaces'
+import type { IBlog, IComment } from '@/types'
 
-export default function Comments({ currentUser, blog }: any) {
-    const { addComment, deleteComment } = useCommentContext()
-    const [text, setText] = useState('')
-    const [comments, setComments] = useState<any[]>([])
+export default function Comments({ blog }: { blog: IBlog }) {
+   const { addComment, deleteComment } = useCommentContext()
+   const [name, setName] = useState('')
+   const [text, setText] = useState('')
+   const [comments, setComments] = useState<IComment[]>([])
 
-    useEffect(() => {
-        if (blog.comments) {
-            setComments(blog.comments)
-        }
-    }, [blog])
+   useEffect(() => {
+      setComments(blog.comments || [])
+   }, [blog])
 
-    const onComment = async () => {
-        let temp = await addComment({ text, blogId: blog._id, by: currentUser.id, })
-        setComments([temp, ...comments])
-        setText('')
-    }
-    const deleteThisComment = async (id: string) => {
-        let temp = await deleteComment(id)
-        if (temp) {
-            setComments(comments.filter(i => i._id != id))
-        }
-    }
+   const onComment = async () => {
+      if (!text.trim() || !blog.id) return
+      const created = await addComment({ blogId: blog.id, name, text })
+      if (created) {
+         setComments((prev) => [created, ...prev])
+         setText('')
+         setName('')
+      }
+   }
 
-    const canDelete = (commentById: string) => {
-        if (currentUser?.id == blog.author._id || currentUser?.id == commentById) {
-            return true
-        } else {
-            false
-        }
-    }
-    return (
-        <>
-            {currentUser &&
-                <div className="py-6">
-                    <h3 className='font-semibold text-xl mb-4'>
-                        Write Comment</h3>
-                    <textarea value={text} onChange={(e) => setText(e.target.value)} required className="textarea textarea-bordered h-24 w-full" placeholder="The blog is awesome!!!"></textarea>
-                    <button className="btn btn-neutral mt-4" onClick={onComment}>Post</button>
-                </div>
-            }
-            <h3 className='font-semibold text-2xl mb-4'>
-                What People Says</h3>
-            {comments.length > 0 ?
-                comments.map((item: IComment, index: number) => <CommentCard key={index} comment={item} deleteComment={deleteThisComment} canDelete={canDelete} />)
-                :
-                <section className="flex justify-center items-center">
-                    <p>No comments Yet</p>
-                </section>
-            }
-        </>
-    )
+   const onDelete = async (id: string) => {
+      const ok = await deleteComment(id)
+      if (ok) setComments((prev) => prev.filter((c) => c.id !== id))
+   }
+
+   return (
+      <section className="comments">
+         <h3 className="comments__head">
+            Discussion
+            <span className="comments__count">{comments.length}</span>
+         </h3>
+
+         <div className="comment-form">
+            <input
+               value={name}
+               onChange={(e) => setName(e.target.value)}
+               className="input"
+               placeholder="Your name (optional)"
+            />
+            <textarea
+               value={text}
+               onChange={(e) => setText(e.target.value)}
+               className="textarea"
+               rows={5}
+               placeholder="Add to the conversation…"
+            />
+            <div className="comment-form__row">
+               <button className="btn btn--solid" onClick={onComment} disabled={!text.trim()}>
+                  Post comment
+               </button>
+            </div>
+         </div>
+
+         {comments.length > 0 ? (
+            <div className="comment-list">
+               {comments.map((comment) => (
+                  <CommentCard key={comment.id} comment={comment} deleteComment={onDelete} />
+               ))}
+            </div>
+         ) : (
+            <p className="muted">No comments yet — be the first.</p>
+         )}
+      </section>
+   )
 }

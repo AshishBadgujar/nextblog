@@ -1,73 +1,37 @@
-"use client"
+'use client'
+import { createContext, useContext, type ReactNode } from 'react'
+import type { IComment } from '@/types'
 
-import { IComment } from "@/data/interfaces"
-import { ReactNode, createContext, useContext, useState } from "react";
-
-type commentContextType = {
-    addComment: (newComment: any) => any;
-    editComment: (id: string, updatedComment: any) => any;
-    deleteComment: (id: string) => any;
+type CommentContextType = {
+   addComment: (comment: Partial<IComment>) => Promise<IComment | null>
+   deleteComment: (id: string) => Promise<boolean>
 }
 
-const commentContextDefaultValues: commentContextType = {
-    addComment: () => { },
-    editComment: () => { },
-    deleteComment: () => { },
+const CommentContext = createContext<CommentContextType | null>(null)
+
+export function CommentProvider({ children }: { children: ReactNode }) {
+   async function addComment(comment: Partial<IComment>) {
+      const res = await fetch('/api/comment', {
+         method: 'POST',
+         body: JSON.stringify(comment),
+      })
+      return res.ok ? ((await res.json()) as IComment) : null
+   }
+
+   async function deleteComment(id: string) {
+      const res = await fetch(`/api/comment/${id}`, { method: 'DELETE' })
+      return res.ok
+   }
+
+   return (
+      <CommentContext.Provider value={{ addComment, deleteComment }}>
+         {children}
+      </CommentContext.Provider>
+   )
 }
 
-const CommentContext = createContext<commentContextType>(commentContextDefaultValues)
-
-type Props = {
-    children: ReactNode
+export function useCommentContext() {
+   const ctx = useContext(CommentContext)
+   if (!ctx) throw new Error('useCommentContext must be used within CommentProvider')
+   return ctx
 }
-
-export const CommentProvider = ({ children }: Props) => {
-    const addComment = async (newComment: any) => {
-        try {
-            const response = await fetch("/api/comment/new", {
-                method: "POST",
-                body: JSON.stringify(newComment)
-            })
-            let temp = await response.json()
-            return temp
-        } catch (error) {
-            console.log(error)
-            return null
-        }
-    }
-    const editComment = async (id: string, updatedComment: any) => {
-        try {
-            const response = await fetch(`/api/comment/${id}`, {
-                method: "PATCH",
-                body: JSON.stringify(updatedComment)
-            })
-            if (response.ok) {
-                let temp = await response.json()
-                return temp
-            }
-        } catch (error) {
-            console.log(error)
-            return null
-        }
-    }
-    const deleteComment = async (id: string) => {
-        try {
-            const response = await fetch(`/api/comment/${id}`, {
-                method: "DELETE",
-            })
-            if (response.ok) {
-                return true
-            }
-        } catch (error) {
-            console.log(error)
-            return false
-        }
-    }
-    return <CommentContext.Provider value={{
-        addComment,
-        editComment,
-        deleteComment
-    }}>{children}</CommentContext.Provider>
-}
-
-export const useCommentContext = () => useContext(CommentContext)

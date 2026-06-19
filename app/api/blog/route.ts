@@ -1,13 +1,25 @@
-import Blog from "@/models/blog"
-import { connectDB } from "@/utils/database"
-export const fetchCache = 'force-no-store';
-export const GET = async (req: Request, res: Response) => {
-    try {
-        await connectDB()
-        const blogs = await Blog.find().populate('author').sort({ updatedAt: -1 })
-        return new Response(JSON.stringify(blogs), { status: 200 })
-    } catch (error) {
-        console.log(error)
-        return new Response("Failed to fetch all blogs", { status: 500 })
-    }
+import { NextResponse } from 'next/server'
+import { getBlogs, createBlog } from '@/lib/db'
+
+export const dynamic = 'force-dynamic'
+
+export async function GET() {
+   const blogs = await getBlogs()
+   return NextResponse.json(blogs)
+}
+
+export async function POST(req: Request) {
+   try {
+      const { title, content, tag, authorName } = await req.json()
+      if (!title || !content) {
+         return NextResponse.json(
+            { error: 'Title and content are required.' },
+            { status: 400 }
+         )
+      }
+      const blog = await createBlog({ title, content, tag, authorName })
+      return NextResponse.json(blog, { status: 201 })
+   } catch {
+      return NextResponse.json({ error: 'Failed to create blog.' }, { status: 500 })
+   }
 }
