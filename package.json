@@ -10,6 +10,7 @@
       "format": "prettier --write . --ignore-path .prettierignore"
    },
    "dependencies": {
+      "@libsql/client": "^0.14.0",
       "@tiptap/extension-blockquote": "^2.11.5",
       "@tiptap/extension-bold": "^2.11.5",
       "@tiptap/extension-bullet-list": "^2.11.5",
