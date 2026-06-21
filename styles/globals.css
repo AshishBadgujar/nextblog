@@ -156,7 +156,8 @@ button {
    padding: 0 1.5rem;
 }
 .narrow {
-   max-width: 720px;
+   /* matches the blog article's main column (≈ container − rail − gap) */
+   max-width: 776px;
 }
 .page {
    display: block;

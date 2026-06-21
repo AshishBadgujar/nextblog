@@ -3,8 +3,8 @@
  * renders a two-tone wordmark from wordA + wordB.
  */
 export const BRAND = {
-   name: 'Nextblogs',
+   name: 'NextBlogs',
    wordA: 'Next',
-   wordB: 'blogs',
+   wordB: 'Blogs',
    tagline: 'Words in black & white.',
 }

@@ -9,18 +9,24 @@ export default function Comments({ blog }: { blog: IBlog }) {
    const [name, setName] = useState('')
    const [text, setText] = useState('')
    const [comments, setComments] = useState<IComment[]>([])
+   const [submitting, setSubmitting] = useState(false)
 
    useEffect(() => {
       setComments(blog.comments || [])
    }, [blog])
 
    const onComment = async () => {
-      if (!text.trim() || !blog.id) return
-      const created = await addComment({ blogId: blog.id, name, text })
-      if (created) {
-         setComments((prev) => [created, ...prev])
-         setText('')
-         setName('')
+      if (!text.trim() || !blog.id || submitting) return
+      setSubmitting(true)
+      try {
+         const created = await addComment({ blogId: blog.id, name, text })
+         if (created) {
+            setComments((prev) => [created, ...prev])
+            setText('')
+            setName('')
+         }
+      } finally {
+         setSubmitting(false)
       }
    }
 
@@ -51,8 +57,12 @@ export default function Comments({ blog }: { blog: IBlog }) {
                placeholder="Add to the conversation…"
             />
             <div className="comment-form__row">
-               <button className="btn btn--solid" onClick={onComment} disabled={!text.trim()}>
-                  Post comment
+               <button
+                  className="btn btn--solid"
+                  onClick={onComment}
+                  disabled={!text.trim() || submitting}
+               >
+                  {submitting ? 'Posting…' : 'Post comment'}
                </button>
             </div>
          </div>
